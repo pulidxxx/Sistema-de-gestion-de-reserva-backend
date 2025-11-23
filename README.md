@@ -1,54 +1,174 @@
-# **¿Que es este proyecto?**
+# Sistema de Gestión de Reservas - Backend
 
-El presente proyecto es una página de reservas de espacios, dicha pagina fue hecha con Vite + React, junto a TypeScript y JavaScript.
+Sistema backend construido con NestJS para la gestión integral de reservas de espacios y materiales en instituciones educativas.
 
-# Motivacion detras de este proyecto-
+## Descripción
 
-El propósito bajo el cual se creó este proyecto fue con el fin de aprender a programar tanto frontend como backend en el framework React, por lo que este proyecto está orientado a ser ejecutado de forma local y no sobre el internet. Aunque con algunos cambios y el despliegue del backend se podría desplegar esta página en la web, este no era el objetivo final del proyecto, por lo que no se realizó.
+Este sistema permite gestionar:
 
-## Cómo ejecutar este proyecto
+- **Espacios físicos**: Aulas, laboratorios, auditorios
+- **Materiales**: Equipos y recursos prestables
+- **Reservas**: Programación y control de reservas de espacios
+- **Reservas de Material**: Gestión de préstamos con control de fechas límite y devoluciones
+- **Usuarios**: Registro y autenticación
+- **Calendario**: Visualización de disponibilidad
 
-Sigue estos pasos para ejecutar la aplicación localmente:
+## Tecnologías
 
-1. Tener PostgreSQL y Node.js instalados en la máquina.
-2. Crear una base de datos en PostgreSQL.
-3. Copiar `backend/.env.example` y renombrarlo a `backend/.dev.env`, luego configurar los datos de conexión a la base de datos dentro de ese archivo.
+- **NestJS** - Framework Node.js
+- **TypeORM** - ORM para PostgreSQL
+- **PostgreSQL** - Base de datos
+- **dayjs** - Manejo de fechas
 
-4. Abrir una terminal y ejecutar:
+## Estructura del Proyecto
 
-```bash
-cd backend && npm i
+```
+src/
+├── database/
+│   ├── Entidades/         # Entidades de TypeORM
+│   ├── data/              # Archivos de datos para seed
+│   ├── scripts/           # Scripts de carga de datos
+│   └── seed/              # Módulo de seed para producción
+├── Modelos/
+│   ├── calendario/        # Gestión de calendarios
+│   ├── espacio/           # Gestión de espacios
+│   ├── material/          # Gestión de materiales
+│   ├── reserva/           # Gestión de reservas
+│   ├── reservaMaterial/   # Gestión de préstamos de material
+│   └── usuario/           # Gestión de usuarios
+└── main.ts               # Punto de entrada
 ```
 
-5. Iniciar el backend:
+## Instalación
+
+### Prerrequisitos
+
+- Node.js (v16 o superior)
+- PostgreSQL (v12 o superior)
+- npm
+
+### Pasos de instalación
+
+1. **Clonar el repositorio**
 
 ```bash
-npm run start
+git clone <repository-url>
+cd Sistema-de-gestion-de-reserva-backend
 ```
 
-6. Ejecutar los seeders para poblar datos iniciales (desde la carpeta `backend`):
+2. **Instalar dependencias**
 
 ```bash
-npm run seed:espacios && npm run seed:material
+npm install
 ```
 
-7. En otra terminal, preparar e iniciar el frontend:
+3. **Configurar variables de entorno**
+
+Crear un archivo `.dev.env` en la raíz del proyecto:
+
+```env
+# Base de datos
+DB_HOST=localhost
+DB_PORT=5432
+DB_USUARIO=postgres
+DB_PASSWORD=tu_password
+DB_DATABASE=reservas
+
+# Servidor
+PORT=3000
+NODE_ENV=development
+```
+
+4. **Crear la base de datos**
+
+Conectarse a PostgreSQL y crear la base de datos
+
+## Ejecución
 
 ```bash
-cd frontend && npm i
 npm run dev
 ```
 
-## Tests
+El servidor estará disponible en `http://localhost:3000`
 
-- Para ejecutar los tests del backend (desde la carpeta `backend`):
+## Poblar Base de Datos
+
+Una vez ejecutada la aplicación, visita el endpoint:
+
+```
+GET http://localhost:3000/seed
+```
+
+Esto cargará automáticamente todos los espacios y materiales desde los archivos de configuración.
+
+## API Endpoints
+
+### Espacios
+
+- `GET /espacio` - Listar todos los espacios
+- `GET /espacio/:id` - Obtener un espacio
+- `POST /espacio` - Crear espacio
+- `PUT /espacio/:id` - Actualizar espacio
+- `DELETE /espacio/:id` - Eliminar espacio
+
+### Materiales
+
+- `GET /material` - Listar materiales
+- `GET /material/:id` - Obtener un material
+- `POST /material` - Crear material
+- `PUT /material/:id` - Actualizar material
+- `DELETE /material/:id` - Eliminar material
+
+### Reservas
+
+- `GET /reserva` - Listar reservas
+- `GET /reserva/:id` - Obtener una reserva
+- `POST /reserva` - Crear reserva
+- `PUT /reserva/:id` - Actualizar reserva
+- `DELETE /reserva/:id` - Eliminar reserva
+
+### Reservas de Material
+
+- `GET /reserva-material` - Listar préstamos
+- `GET /reserva-material/:id` - Obtener un préstamo
+- `GET /reserva-material/email/:email` - Préstamos por usuario
+- `POST /reserva-material` - Crear préstamo
+- `PATCH /reserva-material/:id/estado` - Actualizar estado (Entregado/Devuelto)
+- `PATCH /reserva-material/:id/calificacion` - Calificar préstamo
+
+### Usuarios
+
+- `GET /usuario` - Listar usuarios
+- `GET /usuario/:email` - Obtener usuario
+- `POST /usuario` - Crear usuario
+- `PUT /usuario/:email` - Actualizar usuario
+- `DELETE /usuario/:email` - Eliminar usuario
+
+### Calendario
+
+- `GET /calendario` - Listar eventos
+- `POST /calendario` - Crear evento
+
+### Seed
+
+- `GET /seed` - Poblar base de datos
+
+## 🧪 Testing
 
 ```bash
+# Unit tests
 npm run test
+
+# E2E tests
+npm run test:e2e
+
+# Test coverage
+npm run test:cov
 ```
 
-- Para ejecutar los tests del frontend (desde la carpeta `frontend`):
+## Notas Importantes
 
-```bash
-npm run test:ui
-```
+- El sistema usa **SSL automáticamente en producción** para conexiones seguras a la base de datos
+- Las reservas de material tienen control de **fechas límite** basadas en el `tiempoPrestamo` del material
+- El estado de las reservas de material sigue el flujo: `Pendiente` → `Entregado` → `Devuelto`
+- Los archivos de datos para seed están en `src/database/data/`
