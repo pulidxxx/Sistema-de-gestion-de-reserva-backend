@@ -17,6 +17,7 @@ import { Reserva } from './database/Entidades/reserva.entity';
 import { ReservaMaterialModule } from './Modelos/reservaMaterial/reservaMaterial.module';
 import { Calendario } from './database/Entidades/calendario.entity';
 import { CalendarioModule } from './Modelos/calendario/calendario.module';
+import { SeedModule } from './database/seed/seed.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { CalendarioModule } from './Modelos/calendario/calendario.module';
     MaterialModule,
     ReservaMaterialModule,
     CalendarioModule,
+    SeedModule,
     //UploadModule,
   ],
   controllers: [AppController],
