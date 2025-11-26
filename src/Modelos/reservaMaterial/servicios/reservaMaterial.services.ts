@@ -8,7 +8,7 @@ import { CreateReservaMaterialDto } from '../dto/create.dto';
 import { UpdateReservaMaterialDto } from '../dto/update.dto';
 import { EstadoReservaMaterial } from 'src/database/Entidades/reservaMaterial.entity';
 //import { format } from 'date-fns';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 import { DataSource } from 'typeorm';
 
 @Injectable()
